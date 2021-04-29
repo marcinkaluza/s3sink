@@ -16,7 +16,7 @@ phases:
       - echo Build completed on `date`
 artifacts:
   files:
-    - target/aws-kinesis-analytics-java-apps-1.0.jar
+    - target/datapump-1.0.jar
 
 cache:
   paths:

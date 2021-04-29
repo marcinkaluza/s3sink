@@ -5,7 +5,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.amazonaws</groupId>
-    <artifactId>aws-kinesis-analytics-java-apps</artifactId>
+    <artifactId>datapump</artifactId>
     <version>1.0</version>
     <packaging>jar</packaging>
 
