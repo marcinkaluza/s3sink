@@ -14,11 +14,9 @@ phases:
   post_build:
     commands:
       - echo Build completed on `date`
+      - echo $CODEBUILD_SRC_DIR
       - pwd
 artifacts:
   files:
     - target/datapump-1.0.jar
 
-cache:
-  paths:
-    - '/root/.m2/**/*'
