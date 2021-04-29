@@ -19,4 +19,4 @@ phases:
 artifacts:
   files:
     - target/datapump-1.0.jar
-
+  discard-paths: yes
