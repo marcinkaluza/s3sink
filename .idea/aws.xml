@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="accountSettings">
-    <option name="activeProfile" value="profile:mkaluz+ca-Admin" />
+    <option name="activeProfile" value="profile:test" />
     <option name="activeRegion" value="eu-west-1" />
     <option name="recentlyUsedProfiles">
       <list>
+        <option value="profile:test" />
         <option value="profile:mkaluz+ca-Admin" />
         <option value="profile:default" />
       </list>

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/aws-kinesis-analytics-java-apps.iml" filepath="$PROJECT_DIR$/aws-kinesis-analytics-java-apps.iml" />
+      <module fileurl="file://$PROJECT_DIR$/datapump.iml" filepath="$PROJECT_DIR$/datapump.iml" />
     </modules>
   </component>
 </project>
