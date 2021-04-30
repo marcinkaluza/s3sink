@@ -22,8 +22,8 @@ import java.util.concurrent.TimeUnit;
 public class S3StreamingSinkJob {
     private static final String region = "eu-west-1";
     private static final String inputStreamName = "stockprices";
-    //private static final String s3SinkPath = "s3a://ca-garbage/data";
-    private static final String s3SinkPath = "file:///Users/mkaluz/ca-garbage/data";
+    private static final String s3SinkPath = "s3a://ca-garbage/data";
+    //private static final String s3SinkPath = "file:///Users/mkaluz/ca-garbage/data";
 
     private static DataStream<String> createSource(StreamExecutionEnvironment env) {
 
