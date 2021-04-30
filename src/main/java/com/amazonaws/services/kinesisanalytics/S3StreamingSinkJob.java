@@ -22,7 +22,8 @@ import java.util.concurrent.TimeUnit;
 public class S3StreamingSinkJob {
     private static final String region = "eu-west-1";
     private static final String inputStreamName = "stockprices";
-    private static final String s3SinkPath = "s3a://ca-garbage/data";
+    //private static final String s3SinkPath = "s3a://ca-garbage/data";
+    private static final String s3SinkPath = "file:///Users/mkaluz/ca-garbage/data";
 
     private static DataStream<String> createSource(StreamExecutionEnvironment env) {
 
@@ -88,7 +89,7 @@ public class S3StreamingSinkJob {
     private static class DinkySerializer implements Encoder<StockTick> {
         @Override
         public void encode(StockTick stockTick, OutputStream outputStream) throws IOException {
-            var record = String.format("%s,%f,%tFT\n", stockTick.getIsin(), stockTick.getBid(), stockTick.getTimeStamp());
+            var record = String.format("%s,%f,%tFT%tTZ\n", stockTick.getIsin(), stockTick.getBid(), stockTick.getTimeStamp(),stockTick.getTimeStamp());
             outputStream.write(record.getBytes(StandardCharsets.UTF_8));
         }
     }
