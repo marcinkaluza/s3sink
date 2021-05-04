@@ -6,10 +6,13 @@ import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.serialization.Encoder;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.core.fs.Path;
+
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.sink.filesystem.StreamingFileSink;
+import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.CheckpointRollingPolicy;
 import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.DefaultRollingPolicy;
+import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.OnCheckpointRollingPolicy;
 import org.apache.flink.streaming.connectors.kinesis.FlinkKinesisConsumer;
 import org.apache.flink.streaming.connectors.kinesis.config.ConsumerConfigConstants;
 
@@ -19,11 +22,13 @@ import java.nio.charset.StandardCharsets;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
+import static org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.OnCheckpointRollingPolicy.build;
+
 public class S3StreamingSinkJob {
     private static final String region = "eu-west-1";
     private static final String inputStreamName = "stockprices";
-    private static final String s3SinkPath = "s3a://ca-garbage/data";
-    //private static final String s3SinkPath = "file:///Users/mkaluz/ca-garbage/data";
+    //private static final String s3SinkPath = "s3a://ca-garbage/data";
+    private static final String s3SinkPath = "file:///Users/mkaluz/ca-garbage/data";
 
     private static DataStream<String> createSource(StreamExecutionEnvironment env) {
 
@@ -51,9 +56,22 @@ public class S3StreamingSinkJob {
                 .build();
     }
 
+//    private static StreamingFileSink<StockTick> createParquetSink() {
+//
+//        return StreamingFileSink
+//                .forBulkFormat(new Path(s3SinkPath), ParquetAvroWriters.forReflectRecord(StockTick.class))
+//                .withBucketAssigner(new IsinBucketAssigner("yyyy-MM-dd--HH"))
+//                .withRollingPolicy(OnCheckpointRollingPolicy.build())
+//                .build();
+//    }
+
+
     public static void main(String[] args) throws Exception {
 
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
+
+        //env.enableCheckpointing(1000L);
+        //env.getCheckpointConfig().setCheckpointStorage("hdfs:///checkpoints-data/");
 
         DataStream<String> input = createSource(env);
 

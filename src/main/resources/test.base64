@@ -1,1 +1,2 @@
 ewogICJpc2luIjogIkdCMDAwMDEwMDc2NyIsCiAgInRpbWVTdGFtcCI6ICIyMDIxLTAxLTA0VDA4OjAxOjEyWiIsCiAgImJpZCIgOiAxMi40NSwKICAiYXNrIiA6IDEyLjU1Cn0=
+aws kinesis put-record --stream-name stockprices --data ewogICJpc2luIjogIkdCMDAwMDEwMDc2NyIsCiAgInRpbWVTdGFtcCI6ICIyMDIxLTAxLTA0VDA4OjAxOjEyWiIsCiAgImJpZCIgOiAxMi40NSwKICAiYXNrIiA6IDEyLjU1Cn0= --partition-key WTFT --region eu-west-1
