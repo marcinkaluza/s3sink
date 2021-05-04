@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.text.SimpleDateFormat;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
@@ -45,7 +46,7 @@ public class S3StreamingSinkJob {
                 inputProperties));
     }
 
-    private static StreamingFileSink<StockTick> createSink() {
+    private static StreamingFileSink<ParquetStockTick> createSink() {
 
         return StreamingFileSink
                 .forRowFormat(new Path(s3SinkPath), new DinkySerializer())
@@ -59,9 +60,9 @@ public class S3StreamingSinkJob {
                 .build();
     }
 
-    private static StreamingFileSink<StockTick> createParquetSink() {
+    private static StreamingFileSink<ParquetStockTick> createParquetSink() {
 
-        var writerBuilder = ParquetAvroWriters.forReflectRecord(StockTick.class);
+        var writerBuilder = ParquetAvroWriters.forReflectRecord(ParquetStockTick.class);
 
         return StreamingFileSink
                 .forBulkFormat(new Path(s3SinkPath), writerBuilder)
@@ -82,6 +83,7 @@ public class S3StreamingSinkJob {
 
         input.map(new Tokenizer())
                 //.keyBy(new KeySelector())
+                .map(new StockTickConverter())
                 .addSink(createParquetSink());
 
         env.execute("Flink S3 Streaming Sink Job");
@@ -109,12 +111,25 @@ public class S3StreamingSinkJob {
     }
 
 
-    private static class DinkySerializer implements Encoder<StockTick> {
+    private static class DinkySerializer implements Encoder<ParquetStockTick> {
         @Override
-        public void encode(StockTick stockTick, OutputStream outputStream) throws IOException {
-            var record = String.format("%s,%f,%tFT%tTZ\n", stockTick.getIsin(), stockTick.getBid(), stockTick.getTimeStamp(),stockTick.getTimeStamp());
+        public void encode(ParquetStockTick stockTick, OutputStream outputStream) throws IOException {
+            var record = String.format("%s,%f,%s\n", stockTick.getIsin(), stockTick.getBid(), stockTick.getTimeStamp());
             outputStream.write(record.getBytes(StandardCharsets.UTF_8));
         }
     }
 
+    private static class  StockTickConverter implements MapFunction<StockTick, ParquetStockTick> {
+
+        @Override
+        public ParquetStockTick map(StockTick stockTick) throws Exception {
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            var time = dateFormat.format(stockTick.getTimeStamp());
+
+            return new ParquetStockTick(stockTick.getIsin(),
+                    time,
+                    stockTick.getAsk(),
+                    stockTick.getBid());
+        }
+    }
 }

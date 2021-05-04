@@ -6,19 +6,15 @@ import org.apache.flink.streaming.api.functions.sink.filesystem.BucketAssigner;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
-import java.time.format.DateTimeFormatter;
 
-public class IsinBucketAssigner implements BucketAssigner<StockTick,String> {
-
-    private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+public class IsinBucketAssigner implements BucketAssigner<ParquetStockTick,String> {
 
     IsinBucketAssigner() {
     }
 
     @Override
-    public String getBucketId(StockTick stockTick, Context context) {
-        var id = stockTick.getIsin() + "/" + dateFormat.format(stockTick.getTimeStamp());
+    public String getBucketId(ParquetStockTick stockTick, Context context) {
+        var id = stockTick.getIsin() + "/" + stockTick.getTimeStamp();
         return id;
     }
 

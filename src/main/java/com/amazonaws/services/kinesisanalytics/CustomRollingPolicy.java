@@ -5,11 +5,11 @@ import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.
 
 import java.io.IOException;
 
-public class CustomRollingPolicy extends CheckpointRollingPolicy<StockTick, String> {
+public class CustomRollingPolicy extends CheckpointRollingPolicy<ParquetStockTick, String> {
 
 
     @Override
-    public boolean shouldRollOnEvent(PartFileInfo<String> partFileInfo, StockTick stockTick) throws IOException {
+    public boolean shouldRollOnEvent(PartFileInfo<String> partFileInfo, ParquetStockTick stockTick) throws IOException {
         return true;
     }
 
