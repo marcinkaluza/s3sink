@@ -76,6 +76,7 @@ public class S3StreamingSinkJob {
     public static void main(String[] args) throws Exception {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
+
         env.enableCheckpointing(10000L, CheckpointingMode.EXACTLY_ONCE);
         //env.getCheckpointConfig().setCheckpointStorage("hdfs:///checkpoints-data/");
 

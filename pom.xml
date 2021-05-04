@@ -25,54 +25,54 @@
     <packaging>jar</packaging>
 
     <properties>
-        <flink.version>1.11.1</flink.version>
-        <scala.binary.version>2.12</scala.binary.version>
-        <aws.kda.version>1.2.0</aws.kda.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <flink.version>1.11.3</flink.version>
         <java.version>11</java.version>
-        <log4j.version>2.14.0</log4j.version>
+        <scala.binary.version>2.11</scala.binary.version>
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <log4j.version>2.14.0</log4j.version>
+        <avro.version>1.8.2</avro.version>
+        <flink.format.parquet.version>1.10.0</flink.format.parquet.version>
+        <slf4j.version>1.7.30</slf4j.version>
+        <akka.version>2.5.25</akka.version>
     </properties>
 
     <dependencies>
+        <!-- Apache Flink dependencies -->
+        <!-- These dependencies are provided, because they should not be packaged into the JAR file. -->
 
         <dependency>
             <groupId>org.apache.flink</groupId>
-            <artifactId>flink-parquet_2.11</artifactId>
-            <version>1.11.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.avro</groupId>
-            <artifactId>avro</artifactId>
-            <version>1.10.2</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.parquet</groupId>
-            <artifactId>parquet-avro</artifactId>
-            <version>1.11.1</version>
-        </dependency>
-
-        <dependency>
-            <groupId>com.amazonaws</groupId>
-            <artifactId>aws-kinesisanalytics-runtime</artifactId>
-            <version>${aws.kda.version}</version>
+            <artifactId>flink-java</artifactId>
+            <version>${flink.version}</version>
+            <!--scope>provided</scope-->
         </dependency>
 
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-streaming-java_${scala.binary.version}</artifactId>
             <version>${flink.version}</version>
+            <!--scope>provided</scope-->
         </dependency>
-
 
         <dependency>
             <groupId>org.apache.flink</groupId>
             <artifactId>flink-clients_${scala.binary.version}</artifactId>
             <version>${flink.version}</version>
+            <!--scope>provided</scope-->
         </dependency>
+
+
+        <!-- Kinesis Data Analytics for Java dependency -->
+
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-kinesisanalytics-runtime</artifactId>
+            <version>1.2.0</version>
+        </dependency>
+
+        <!-- Add connector dependencies here. They must be in the default scope (compile). -->
 
         <dependency>
             <groupId>org.apache.flink</groupId>
@@ -80,24 +80,43 @@
             <version>${flink.version}</version>
         </dependency>
 
-
         <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-slf4j-impl</artifactId>
-            <version>${log4j.version}</version>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-json</artifactId>
+            <version>${flink.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-api</artifactId>
-            <version>${log4j.version}</version>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-avro</artifactId>
+            <version>${flink.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>org.apache.logging.log4j</groupId>
-            <artifactId>log4j-core</artifactId>
-            <version>${log4j.version}</version>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-parquet_${scala.binary.version}</artifactId>
+            <version>${flink.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.flink</groupId>
+            <artifactId>flink-s3-fs-hadoop</artifactId>
+            <version>${flink.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>vc.inreach.aws</groupId>
+            <artifactId>aws-signing-request-interceptor</artifactId>
+            <version>0.0.22</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.parquet</groupId>
+            <artifactId>parquet-avro</artifactId>
+            <version>${flink.format.parquet.version}</version>
+        </dependency>
+
+        <!-- Lombok for data generation -->
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -105,6 +124,7 @@
             <scope>compile</scope>
         </dependency>
 
+        <!-- Jackson for serialization -->
         <dependency>
             <groupId>com.fasterxml.jackson.datatype</groupId>
             <artifactId>jackson-datatype-jdk8</artifactId>
@@ -123,18 +143,35 @@
             <version>2.10.1</version>
         </dependency>
 
-
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-core</artifactId>
             <version>2.10.1</version>
         </dependency>
 
+        <!-- Add logging framework, to produce console output when running in the IDE. -->
+        <!-- These dependencies are excluded from the application JAR by default. -->
         <dependency>
-            <groupId>org.apache.hadoop</groupId>
-            <artifactId>hadoop-client</artifactId>
-            <version>3.2.1</version>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-slf4j-impl</artifactId>
+            <version>${log4j.version}</version>
+            <scope>runtime</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j.version}</version>
+            <scope>runtime</scope>
+        </dependency>
+
     </dependencies>
 
 
