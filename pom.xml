@@ -250,6 +250,7 @@ This file has been modified to include additional dependencies.
                 <groupId>org.apache.avro</groupId>
                 <artifactId>avro-maven-plugin</artifactId>
                 <version>${avro.version}</version>
+
                 <executions>
                     <execution>
                         <phase>generate-sources</phase>

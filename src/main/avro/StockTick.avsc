@@ -1,0 +1,17 @@
+{
+  "namespace": "com.amazonaws.services.kinesisanalytics",
+  "type": "record",
+  "name": "StockTick",
+  "fields": [
+    {"name": "isin", "type": "string"},
+    {
+      "name": "timeStamp",
+      "type": {
+        "logicalType": "timestamp-millis",
+        "type": "datetime"
+      }
+    },
+    {"name": "bid", "type": "double"},
+    {"name": "ask", "type": "double"}
+  ]
+}
