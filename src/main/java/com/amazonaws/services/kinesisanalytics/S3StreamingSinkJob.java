@@ -6,6 +6,7 @@ import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.serialization.Encoder;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.core.fs.Path;
+
 import org.apache.flink.formats.parquet.avro.ParquetAvroWriters;
 import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.datastream.DataStream;
