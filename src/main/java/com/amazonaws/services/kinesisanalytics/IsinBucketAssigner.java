@@ -7,14 +7,14 @@ import org.apache.flink.streaming.api.functions.sink.filesystem.BucketAssigner;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-public class IsinBucketAssigner implements BucketAssigner<ParquetStockTick,String> {
+public class IsinBucketAssigner implements BucketAssigner<StockTick,String> {
 
     IsinBucketAssigner() {
     }
 
     @Override
-    public String getBucketId(ParquetStockTick stockTick, Context context) {
-        var id = stockTick.getIsin() + "/" + stockTick.getTimeStamp();
+    public String getBucketId(StockTick stockTick, Context context) {
+        var id = stockTick.getIsin() + "/" + stockTick.getTimeStamp().toString("YYYY-mm-DD");
         return id;
     }
 

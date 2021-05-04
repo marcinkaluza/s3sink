@@ -1,12 +1,11 @@
 package com.amazonaws.services.kinesisanalytics;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.serialization.Encoder;
 import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.core.fs.Path;
-
 import org.apache.flink.formats.parquet.avro.ParquetAvroWriters;
 import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.datastream.DataStream;
@@ -21,15 +20,14 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
-import java.text.SimpleDateFormat;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
 public class S3StreamingSinkJob {
     private static final String region = "eu-west-1";
     private static final String inputStreamName = "stockprices";
-    private static final String s3SinkPath = "s3a://ca-garbage/data";
-    //private static final String s3SinkPath = "file:///Users/mkaluz/ca-garbage/data";
+    //private static final String s3SinkPath = "s3a://ca-garbage/data";
+    private static final String s3SinkPath = "file:///Users/mkaluz/ca-garbage/data";
 
     private static final Logger LOG = LoggerFactory.getLogger(S3StreamingSinkJob.class);
 
@@ -47,7 +45,7 @@ public class S3StreamingSinkJob {
                 inputProperties));
     }
 
-    private static StreamingFileSink<ParquetStockTick> createSink() {
+    private static StreamingFileSink<StockTick> createSink() {
 
         return StreamingFileSink
                 .forRowFormat(new Path(s3SinkPath), new DinkySerializer())
@@ -61,9 +59,9 @@ public class S3StreamingSinkJob {
                 .build();
     }
 
-    private static StreamingFileSink<ParquetStockTick> createParquetSink() {
+    private static StreamingFileSink<StockTick> createParquetSink() {
 
-        var writerBuilder = ParquetAvroWriters.forReflectRecord(ParquetStockTick.class);
+        var writerBuilder = ParquetAvroWriters.forReflectRecord(StockTick.class);
 
         return StreamingFileSink
                 .forBulkFormat(new Path(s3SinkPath), writerBuilder)
@@ -77,15 +75,11 @@ public class S3StreamingSinkJob {
     public static void main(String[] args) throws Exception {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-
-        env.enableCheckpointing(10000L, CheckpointingMode.EXACTLY_ONCE);
-        //env.getCheckpointConfig().setCheckpointStorage("hdfs:///checkpoints-data/");
+        env.enableCheckpointing(60000L, CheckpointingMode.EXACTLY_ONCE);
 
         DataStream<String> input = createSource(env);
 
         input.map(new Tokenizer())
-                //.keyBy(new KeySelector())
-                .map(new StockTickConverter())
                 .addSink(createParquetSink());
 
         env.execute("Flink S3 Streaming Sink Job");
@@ -94,13 +88,19 @@ public class S3StreamingSinkJob {
     public static final class Tokenizer
             implements MapFunction<String, StockTick> {
 
-        private static final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
+        private static final ObjectMapper mapper = new ObjectMapper()
+                .registerModule(new JodaModule());
 
         @Override
         public StockTick map(String s) throws Exception {
 
+            try{
             var stockTick = mapper.readValue(s, StockTick.class);
-            return stockTick;
+            return stockTick;}
+            catch(Throwable e)
+            {
+                throw e;
+            }
         }
     }
 
@@ -113,25 +113,25 @@ public class S3StreamingSinkJob {
     }
 
 
-    private static class DinkySerializer implements Encoder<ParquetStockTick> {
+    private static class DinkySerializer implements Encoder<StockTick> {
         @Override
-        public void encode(ParquetStockTick stockTick, OutputStream outputStream) throws IOException {
-            var record = String.format("%s,%f,%s\n", stockTick.getIsin(), stockTick.getBid(), stockTick.getTimeStamp());
+        public void encode(StockTick stockTick, OutputStream outputStream) throws IOException {
+            var record = String.format("%s,%f,%s\n", stockTick.getIsin(), stockTick.getBid(), stockTick.getTimeStamp().toString());
             outputStream.write(record.getBytes(StandardCharsets.UTF_8));
         }
     }
 
-    private static class  StockTickConverter implements MapFunction<StockTick, ParquetStockTick> {
-
-        @Override
-        public ParquetStockTick map(StockTick stockTick) throws Exception {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-            var time = dateFormat.format(stockTick.getTimeStamp());
-
-            return new ParquetStockTick(stockTick.getIsin(),
-                    time,
-                    stockTick.getAsk(),
-                    stockTick.getBid());
-        }
-    }
+//    private static class  StockTickConverter implements MapFunction<StockTick, StockTick> {
+//
+//        @Override
+//        public ParquetStockTick map(StockTick stockTick) throws Exception {
+//            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+//
+//
+//            return new ParquetStockTick(stockTick.getIsin(),
+//                    stockTick.getTimeStamp().toString("yyyy-MM-dd HH:mm:SS"),
+//                    stockTick.getAsk(),
+//                    stockTick.getBid());
+//        }
+//    }
 }
