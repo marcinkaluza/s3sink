@@ -26,7 +26,7 @@
 
     <properties>
         <flink.version>1.11.1</flink.version>
-        <scala.binary.version>2.11</scala.binary.version>
+        <scala.binary.version>2.12</scala.binary.version>
         <aws.kda.version>1.2.0</aws.kda.version>
         <java.version>11</java.version>
         <log4j.version>2.14.0</log4j.version>
@@ -80,6 +80,7 @@
             <version>${flink.version}</version>
         </dependency>
 
+
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j-impl</artifactId>
@@ -116,6 +117,18 @@
             <version>2.10.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.10.1</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+            <version>2.10.1</version>
+        </dependency>
     </dependencies>
 
 

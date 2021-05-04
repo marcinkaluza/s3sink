@@ -10,11 +10,8 @@ import org.apache.flink.formats.parquet.avro.ParquetAvroWriters;
 import org.apache.flink.streaming.api.CheckpointingMode;
 import org.apache.flink.streaming.api.datastream.DataStream;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
-import org.apache.flink.streaming.api.functions.sink.filesystem.PartFileInfo;
 import org.apache.flink.streaming.api.functions.sink.filesystem.StreamingFileSink;
-import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.CheckpointRollingPolicy;
 import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.DefaultRollingPolicy;
-import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.OnCheckpointRollingPolicy;
 import org.apache.flink.streaming.connectors.kinesis.FlinkKinesisConsumer;
 import org.apache.flink.streaming.connectors.kinesis.config.ConsumerConfigConstants;
 import org.slf4j.Logger;
@@ -29,8 +26,8 @@ import java.util.concurrent.TimeUnit;
 public class S3StreamingSinkJob {
     private static final String region = "eu-west-1";
     private static final String inputStreamName = "stockprices";
-    private static final String s3SinkPath = "s3a://ca-garbage/data";
-    //private static final String s3SinkPath = "file:///Users/mkaluz/ca-garbage/data";
+    //private static final String s3SinkPath = "s3a://ca-garbage/data";
+    private static final String s3SinkPath = "file:///Users/mkaluz/ca-garbage/data";
 
     private static final Logger LOG = LoggerFactory.getLogger(S3StreamingSinkJob.class);
 
@@ -78,7 +75,7 @@ public class S3StreamingSinkJob {
     public static void main(String[] args) throws Exception {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-        //env.enableCheckpointing(10000L, CheckpointingMode.EXACTLY_ONCE);
+        env.enableCheckpointing(10000L, CheckpointingMode.EXACTLY_ONCE);
         //env.getCheckpointConfig().setCheckpointStorage("hdfs:///checkpoints-data/");
 
         DataStream<String> input = createSource(env);
