@@ -8,7 +8,7 @@
       "name": "timeStamp",
       "type": {
         "logicalType": "timestamp-millis",
-        "type": "datetime"
+        "type": "long"
       }
     },
     {"name": "bid", "type": "double"},
