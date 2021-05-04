@@ -13,7 +13,7 @@ public class IsinBucketAssigner implements BucketAssigner<StockTick,String> {
 
     private SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-    IsinBucketAssigner(String format) {
+    IsinBucketAssigner() {
     }
 
     @Override

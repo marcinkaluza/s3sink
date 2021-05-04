@@ -74,14 +74,6 @@
             <version>${flink.version}</version>
         </dependency>
 
-
-<!--        <dependency>-->
-<!--            <groupId>vc.inreach.aws</groupId>-->
-<!--            <artifactId>aws-signing-request-interceptor</artifactId>-->
-<!--            <version>0.0.22</version>-->
-<!--        </dependency>-->
-
-
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-slf4j-impl</artifactId>
@@ -153,6 +145,12 @@
     </profiles>
 
     <build>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+            </resource>
+        </resources>
+
         <plugins>
 
             <!-- Java Compiler -->
