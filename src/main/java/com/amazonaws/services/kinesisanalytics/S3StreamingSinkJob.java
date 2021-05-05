@@ -81,7 +81,8 @@ public class S3StreamingSinkJob {
 
         env.enableCheckpointing(60000L, CheckpointingMode.EXACTLY_ONCE);
         DataStream<StockTick> input = createSource(env);
-        input.addSink(createParquetSink(sinkPath));
+        input.addSink(createParquetSink(sinkPath))
+                .name("S3 Sink");
         env.execute("Flink S3 Streaming Sink Job");
     }
 
