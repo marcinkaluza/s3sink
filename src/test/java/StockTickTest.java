@@ -1,7 +1,7 @@
 import com.amazonaws.services.kinesisanalytics.data.StockTick;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import lombok.SneakyThrows;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
@@ -10,8 +10,7 @@ import static org.junit.Assert.assertEquals;
 public class StockTickTest {
 
     @Test
-    @SneakyThrows
-    public void deserializeJson(){
+    public void deserializeJson() throws JsonProcessingException {
         var json = "{\n" +
                 "  \"isin\": \"GB0000100767\",\n" +
                 "  \"timeStamp\": \"2021-01-04T08:05:12Z\",\n" +
