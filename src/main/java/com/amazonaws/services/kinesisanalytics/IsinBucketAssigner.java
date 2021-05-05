@@ -14,7 +14,7 @@ public class IsinBucketAssigner implements BucketAssigner<StockTick,String> {
 
     @Override
     public String getBucketId(StockTick stockTick, Context context) {
-        var id = stockTick.getIsin() + "/" + stockTick.getTimeStamp().toString("YYYY-mm-DD");
+        var id = stockTick.getBucketKey();
         return id;
     }
 
