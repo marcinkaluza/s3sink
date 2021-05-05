@@ -39,7 +39,7 @@ public class S3StreamingSinkJob {
         inputProperties.setProperty(ConsumerConfigConstants.SHARD_GETRECORDS_INTERVAL_MILLIS, "1000");
 
         return env.addSource(new FlinkKinesisConsumer<>(inputStreamName,
-                new StockTickDeserializationSchema(),
+                new StockTickSerializationSchema(),
                 inputProperties));
     }
 
@@ -76,8 +76,6 @@ public class S3StreamingSinkJob {
         if(args.length > 0){
             sinkPath = args[0];
         }
-
-        SpecificData.get().addLogicalTypeConversion(new TimeConversions.TimestampConversion());
 
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 

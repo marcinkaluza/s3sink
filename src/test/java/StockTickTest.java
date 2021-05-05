@@ -1,4 +1,4 @@
-import com.amazonaws.services.kinesisanalytics.StockTickDeserializationSchema;
+import com.amazonaws.services.kinesisanalytics.StockTickSerializationSchema;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
@@ -20,7 +20,7 @@ public class StockTickTest {
 
         var expectedTimestamp =  new DateTime(2021, 1, 4, 8, 5, 12, 0);
 
-        var schema = new StockTickDeserializationSchema();
+        var schema = new StockTickSerializationSchema();
         var tick = schema.deserialize(json.getBytes(StandardCharsets.UTF_8));
 
 
@@ -29,6 +29,4 @@ public class StockTickTest {
         assertEquals(12.45,tick.getBid(),  1E-08);
         assertEquals(12.55, tick.getAsk(), 1E-08);
     }
-
-
 }
