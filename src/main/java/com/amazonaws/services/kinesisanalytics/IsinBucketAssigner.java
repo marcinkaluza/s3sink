@@ -7,8 +7,6 @@ import org.apache.flink.streaming.api.functions.sink.filesystem.BucketAssigner;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
 
 public class IsinBucketAssigner implements BucketAssigner<StockTick,String> {
 
@@ -17,8 +15,12 @@ public class IsinBucketAssigner implements BucketAssigner<StockTick,String> {
 
     @Override
     public String getBucketId(StockTick stockTick, Context context) {
-        var date = DateTimeFormatter.ISO_LOCAL_DATE.withZone(ZoneId.systemDefault()).format(stockTick.getTimeStamp());
-        var id = stockTick.getIsin() + "/" + date;
+
+        var id = String.format("%s/%d-%02d-%02d",
+                stockTick.getIsin(),
+                stockTick.getTimeStamp().getYear(),
+                stockTick.getTimeStamp().getMonthOfYear(),
+                stockTick.getTimeStamp().getDayOfMonth());
         return id;
     }
 

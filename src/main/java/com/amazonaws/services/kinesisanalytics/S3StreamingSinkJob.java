@@ -77,7 +77,7 @@ public class S3StreamingSinkJob {
             sinkPath = args[0];
         }
 
-        SpecificData.get().addLogicalTypeConversion(new TimeConversions.TimestampMillisConversion());
+        //SpecificData.get().addLogicalTypeConversion(new TimeConversions.TimestampMillisConversion());
 
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 

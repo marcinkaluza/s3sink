@@ -5,13 +5,12 @@
  */
 package com.amazonaws.services.kinesisanalytics.data;
 
-import org.apache.avro.generic.GenericArray;
 import org.apache.avro.specific.SpecificData;
-import org.apache.avro.util.Utf8;
 import org.apache.avro.message.BinaryMessageEncoder;
 import org.apache.avro.message.BinaryMessageDecoder;
 import org.apache.avro.message.SchemaStore;
 
+@SuppressWarnings("all")
 @org.apache.avro.specific.AvroGenerated
 public class StockTick extends org.apache.avro.specific.SpecificRecordBase implements org.apache.avro.specific.SpecificRecord {
   private static final long serialVersionUID = 8312684477138101687L;
@@ -19,9 +18,6 @@ public class StockTick extends org.apache.avro.specific.SpecificRecordBase imple
   public static org.apache.avro.Schema getClassSchema() { return SCHEMA$; }
 
   private static SpecificData MODEL$ = new SpecificData();
-static {
-    MODEL$.addLogicalTypeConversion(new org.apache.avro.data.TimeConversions.TimestampMillisConversion());
-  }
 
   private static final BinaryMessageEncoder<StockTick> ENCODER =
       new BinaryMessageEncoder<StockTick>(MODEL$, SCHEMA$);
@@ -30,16 +26,7 @@ static {
       new BinaryMessageDecoder<StockTick>(MODEL$, SCHEMA$);
 
   /**
-   * Return the BinaryMessageEncoder instance used by this class.
-   * @return the message encoder used by this class
-   */
-  public static BinaryMessageEncoder<StockTick> getEncoder() {
-    return ENCODER;
-  }
-
-  /**
    * Return the BinaryMessageDecoder instance used by this class.
-   * @return the message decoder used by this class
    */
   public static BinaryMessageDecoder<StockTick> getDecoder() {
     return DECODER;
@@ -48,36 +35,26 @@ static {
   /**
    * Create a new BinaryMessageDecoder instance for this class that uses the specified {@link SchemaStore}.
    * @param resolver a {@link SchemaStore} used to find schemas by fingerprint
-   * @return a BinaryMessageDecoder instance for this class backed by the given SchemaStore
    */
   public static BinaryMessageDecoder<StockTick> createDecoder(SchemaStore resolver) {
     return new BinaryMessageDecoder<StockTick>(MODEL$, SCHEMA$, resolver);
   }
 
-  /**
-   * Serializes this StockTick to a ByteBuffer.
-   * @return a buffer holding the serialized data for this instance
-   * @throws java.io.IOException if this instance could not be serialized
-   */
+  /** Serializes this StockTick to a ByteBuffer. */
   public java.nio.ByteBuffer toByteBuffer() throws java.io.IOException {
     return ENCODER.encode(this);
   }
 
-  /**
-   * Deserializes a StockTick from a ByteBuffer.
-   * @param b a byte buffer holding serialized data for an instance of this class
-   * @return a StockTick instance decoded from the given buffer
-   * @throws java.io.IOException if the given bytes could not be deserialized into an instance of this class
-   */
+  /** Deserializes a StockTick from a ByteBuffer. */
   public static StockTick fromByteBuffer(
       java.nio.ByteBuffer b) throws java.io.IOException {
     return DECODER.decode(b);
   }
 
-   private java.lang.CharSequence isin;
-   private java.time.Instant timeStamp;
-   private double bid;
-   private double ask;
+  @Deprecated public java.lang.CharSequence isin;
+  @Deprecated public org.joda.time.DateTime timeStamp;
+  @Deprecated public double bid;
+  @Deprecated public double ask;
 
   /**
    * Default constructor.  Note that this does not initialize fields
@@ -93,14 +70,13 @@ static {
    * @param bid The new value for bid
    * @param ask The new value for ask
    */
-  public StockTick(java.lang.CharSequence isin, java.time.Instant timeStamp, java.lang.Double bid, java.lang.Double ask) {
+  public StockTick(java.lang.CharSequence isin, org.joda.time.DateTime timeStamp, java.lang.Double bid, java.lang.Double ask) {
     this.isin = isin;
-    this.timeStamp = timeStamp.truncatedTo(java.time.temporal.ChronoUnit.MILLIS);
+    this.timeStamp = timeStamp;
     this.bid = bid;
     this.ask = ask;
   }
 
-  public org.apache.avro.specific.SpecificData getSpecificData() { return MODEL$; }
   public org.apache.avro.Schema getSchema() { return SCHEMA$; }
   // Used by DatumWriter.  Applications should not call.
   public java.lang.Object get(int field$) {
@@ -109,14 +85,19 @@ static {
     case 1: return timeStamp;
     case 2: return bid;
     case 3: return ask;
-    default: throw new IndexOutOfBoundsException("Invalid index: " + field$);
+    default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
+
+  protected static final org.apache.avro.data.TimeConversions.DateConversion DATE_CONVERSION = new org.apache.avro.data.TimeConversions.DateConversion();
+  protected static final org.apache.avro.data.TimeConversions.TimeConversion TIME_CONVERSION = new org.apache.avro.data.TimeConversions.TimeConversion();
+  protected static final org.apache.avro.data.TimeConversions.TimestampConversion TIMESTAMP_CONVERSION = new org.apache.avro.data.TimeConversions.TimestampConversion();
+  protected static final org.apache.avro.Conversions.DecimalConversion DECIMAL_CONVERSION = new org.apache.avro.Conversions.DecimalConversion();
 
   private static final org.apache.avro.Conversion<?>[] conversions =
       new org.apache.avro.Conversion<?>[] {
       null,
-      new org.apache.avro.data.TimeConversions.TimestampMillisConversion(),
+      TIMESTAMP_CONVERSION,
       null,
       null,
       null
@@ -132,10 +113,10 @@ static {
   public void put(int field$, java.lang.Object value$) {
     switch (field$) {
     case 0: isin = (java.lang.CharSequence)value$; break;
-    case 1: timeStamp = (java.time.Instant)value$; break;
+    case 1: timeStamp = (org.joda.time.DateTime)value$; break;
     case 2: bid = (java.lang.Double)value$; break;
     case 3: ask = (java.lang.Double)value$; break;
-    default: throw new IndexOutOfBoundsException("Invalid index: " + field$);
+    default: throw new org.apache.avro.AvroRuntimeException("Bad index");
     }
   }
 
@@ -146,7 +127,6 @@ static {
   public java.lang.CharSequence getIsin() {
     return isin;
   }
-
 
   /**
    * Sets the value of the 'isin' field.
@@ -160,33 +140,31 @@ static {
    * Gets the value of the 'timeStamp' field.
    * @return The value of the 'timeStamp' field.
    */
-  public java.time.Instant getTimeStamp() {
+  public org.joda.time.DateTime getTimeStamp() {
     return timeStamp;
   }
-
 
   /**
    * Sets the value of the 'timeStamp' field.
    * @param value the value to set.
    */
-  public void setTimeStamp(java.time.Instant value) {
-    this.timeStamp = value.truncatedTo(java.time.temporal.ChronoUnit.MILLIS);
+  public void setTimeStamp(org.joda.time.DateTime value) {
+    this.timeStamp = value;
   }
 
   /**
    * Gets the value of the 'bid' field.
    * @return The value of the 'bid' field.
    */
-  public double getBid() {
+  public java.lang.Double getBid() {
     return bid;
   }
-
 
   /**
    * Sets the value of the 'bid' field.
    * @param value the value to set.
    */
-  public void setBid(double value) {
+  public void setBid(java.lang.Double value) {
     this.bid = value;
   }
 
@@ -194,16 +172,15 @@ static {
    * Gets the value of the 'ask' field.
    * @return The value of the 'ask' field.
    */
-  public double getAsk() {
+  public java.lang.Double getAsk() {
     return ask;
   }
-
 
   /**
    * Sets the value of the 'ask' field.
    * @param value the value to set.
    */
-  public void setAsk(double value) {
+  public void setAsk(java.lang.Double value) {
     this.ask = value;
   }
 
@@ -221,11 +198,7 @@ static {
    * @return A new StockTick RecordBuilder
    */
   public static com.amazonaws.services.kinesisanalytics.data.StockTick.Builder newBuilder(com.amazonaws.services.kinesisanalytics.data.StockTick.Builder other) {
-    if (other == null) {
-      return new com.amazonaws.services.kinesisanalytics.data.StockTick.Builder();
-    } else {
-      return new com.amazonaws.services.kinesisanalytics.data.StockTick.Builder(other);
-    }
+    return new com.amazonaws.services.kinesisanalytics.data.StockTick.Builder(other);
   }
 
   /**
@@ -234,22 +207,17 @@ static {
    * @return A new StockTick RecordBuilder
    */
   public static com.amazonaws.services.kinesisanalytics.data.StockTick.Builder newBuilder(com.amazonaws.services.kinesisanalytics.data.StockTick other) {
-    if (other == null) {
-      return new com.amazonaws.services.kinesisanalytics.data.StockTick.Builder();
-    } else {
-      return new com.amazonaws.services.kinesisanalytics.data.StockTick.Builder(other);
-    }
+    return new com.amazonaws.services.kinesisanalytics.data.StockTick.Builder(other);
   }
 
   /**
    * RecordBuilder for StockTick instances.
    */
-  @org.apache.avro.specific.AvroGenerated
   public static class Builder extends org.apache.avro.specific.SpecificRecordBuilderBase<StockTick>
     implements org.apache.avro.data.RecordBuilder<StockTick> {
 
     private java.lang.CharSequence isin;
-    private java.time.Instant timeStamp;
+    private org.joda.time.DateTime timeStamp;
     private double bid;
     private double ask;
 
@@ -266,19 +234,19 @@ static {
       super(other);
       if (isValidValue(fields()[0], other.isin)) {
         this.isin = data().deepCopy(fields()[0].schema(), other.isin);
-        fieldSetFlags()[0] = other.fieldSetFlags()[0];
+        fieldSetFlags()[0] = true;
       }
       if (isValidValue(fields()[1], other.timeStamp)) {
         this.timeStamp = data().deepCopy(fields()[1].schema(), other.timeStamp);
-        fieldSetFlags()[1] = other.fieldSetFlags()[1];
+        fieldSetFlags()[1] = true;
       }
       if (isValidValue(fields()[2], other.bid)) {
         this.bid = data().deepCopy(fields()[2].schema(), other.bid);
-        fieldSetFlags()[2] = other.fieldSetFlags()[2];
+        fieldSetFlags()[2] = true;
       }
       if (isValidValue(fields()[3], other.ask)) {
         this.ask = data().deepCopy(fields()[3].schema(), other.ask);
-        fieldSetFlags()[3] = other.fieldSetFlags()[3];
+        fieldSetFlags()[3] = true;
       }
     }
 
@@ -287,7 +255,7 @@ static {
      * @param other The existing instance to copy.
      */
     private Builder(com.amazonaws.services.kinesisanalytics.data.StockTick other) {
-      super(SCHEMA$);
+            super(SCHEMA$);
       if (isValidValue(fields()[0], other.isin)) {
         this.isin = data().deepCopy(fields()[0].schema(), other.isin);
         fieldSetFlags()[0] = true;
@@ -313,7 +281,6 @@ static {
     public java.lang.CharSequence getIsin() {
       return isin;
     }
-
 
     /**
       * Sets the value of the 'isin' field.
@@ -350,19 +317,18 @@ static {
       * Gets the value of the 'timeStamp' field.
       * @return The value.
       */
-    public java.time.Instant getTimeStamp() {
+    public org.joda.time.DateTime getTimeStamp() {
       return timeStamp;
     }
-
 
     /**
       * Sets the value of the 'timeStamp' field.
       * @param value The value of 'timeStamp'.
       * @return This builder.
       */
-    public com.amazonaws.services.kinesisanalytics.data.StockTick.Builder setTimeStamp(java.time.Instant value) {
+    public com.amazonaws.services.kinesisanalytics.data.StockTick.Builder setTimeStamp(org.joda.time.DateTime value) {
       validate(fields()[1], value);
-      this.timeStamp = value.truncatedTo(java.time.temporal.ChronoUnit.MILLIS);
+      this.timeStamp = value;
       fieldSetFlags()[1] = true;
       return this;
     }
@@ -389,10 +355,9 @@ static {
       * Gets the value of the 'bid' field.
       * @return The value.
       */
-    public double getBid() {
+    public java.lang.Double getBid() {
       return bid;
     }
-
 
     /**
       * Sets the value of the 'bid' field.
@@ -428,10 +393,9 @@ static {
       * Gets the value of the 'ask' field.
       * @return The value.
       */
-    public double getAsk() {
+    public java.lang.Double getAsk() {
       return ask;
     }
-
 
     /**
       * Sets the value of the 'ask' field.
@@ -468,13 +432,11 @@ static {
     public StockTick build() {
       try {
         StockTick record = new StockTick();
-        record.isin = fieldSetFlags()[0] ? this.isin : (java.lang.CharSequence) defaultValue(fields()[0]);
-        record.timeStamp = fieldSetFlags()[1] ? this.timeStamp : (java.time.Instant) defaultValue(fields()[1]);
-        record.bid = fieldSetFlags()[2] ? this.bid : (java.lang.Double) defaultValue(fields()[2]);
-        record.ask = fieldSetFlags()[3] ? this.ask : (java.lang.Double) defaultValue(fields()[3]);
+        record.isin = fieldSetFlags()[0] ? this.isin : (java.lang.CharSequence) defaultValue(fields()[0], record.getConversion(0));
+        record.timeStamp = fieldSetFlags()[1] ? this.timeStamp : (org.joda.time.DateTime) defaultValue(fields()[1], record.getConversion(1));
+        record.bid = fieldSetFlags()[2] ? this.bid : (java.lang.Double) defaultValue(fields()[2], record.getConversion(2));
+        record.ask = fieldSetFlags()[3] ? this.ask : (java.lang.Double) defaultValue(fields()[3], record.getConversion(3));
         return record;
-      } catch (org.apache.avro.AvroMissingFieldException e) {
-        throw e;
       } catch (java.lang.Exception e) {
         throw new org.apache.avro.AvroRuntimeException(e);
       }
@@ -500,13 +462,3 @@ static {
   }
 
 }
-
-
-
-
-
-
-
-
-
-

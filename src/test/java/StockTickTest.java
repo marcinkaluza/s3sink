@@ -1,16 +1,16 @@
-import com.amazonaws.services.kinesisanalytics.data.StockTick;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.amazonaws.services.kinesisanalytics.StockTickDeserializationSchema;
 import org.joda.time.DateTime;
 import org.junit.Test;
+
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 
 import static org.junit.Assert.assertEquals;
 
 public class StockTickTest {
 
     @Test
-    public void deserializeJson() throws JsonProcessingException {
+    public void deserializeJson() throws IOException {
         var json = "{\n" +
                 "  \"isin\": \"GB0000100767\",\n" +
                 "  \"timeStamp\": \"2021-01-04T08:05:12Z\",\n" +
@@ -20,8 +20,8 @@ public class StockTickTest {
 
         var expectedTimestamp =  new DateTime(2021, 1, 4, 8, 5, 12, 0);
 
-        var objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
-        var tick = objectMapper.readValue(json, StockTick.class);
+        var schema = new StockTickDeserializationSchema();
+        var tick = schema.deserialize(json.getBytes(StandardCharsets.UTF_8));
 
 
         //assertEquals(expectedTimestamp, tick.getTimeStamp());

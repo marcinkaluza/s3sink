@@ -2,20 +2,28 @@ package com.amazonaws.services.kinesisanalytics;
 
 import com.amazonaws.services.kinesisanalytics.data.StockTick;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
+import org.joda.time.DateTime;
 
 import java.io.IOException;
 
 public class StockTickDeserializationSchema implements DeserializationSchema<StockTick> {
-    private static final ObjectMapper mapper = new ObjectMapper().registerModule(new JavaTimeModule());
+
 
     @Override
     public StockTick deserialize(byte[] bytes) throws IOException {
-        //parse the event payload and remove the type attribute
-        var stockTick = mapper.readValue(bytes, StockTick.class);
-        return stockTick;
+        var mapper = new ObjectMapper();
+        ObjectNode node = mapper.readValue(bytes, ObjectNode.class);
+
+        return StockTick
+                .newBuilder()
+                .setIsin(node.get("isin").asText())
+                .setTimeStamp(new DateTime(node.get("timeStamp").asText()))
+                .setBid(node.get("bid").asDouble())
+                .setAsk(node.get("ask").asDouble())
+                .build();
     }
 
     @Override
