@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
+import org.apache.flink.formats.avro.typeutils.AvroTypeInfo;
 import org.joda.time.DateTime;
 
 import java.io.IOException;
@@ -33,6 +34,6 @@ public class StockTickDeserializationSchema implements DeserializationSchema<Sto
 
     @Override
     public TypeInformation<StockTick> getProducedType() {
-        return TypeInformation.of(StockTick.class);
+        return new AvroTypeInfo<StockTick>(StockTick.class);
     }
 }
