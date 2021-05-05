@@ -1,6 +1,7 @@
 
 package com.amazonaws.services.kinesisanalytics;
 
+import com.amazonaws.services.kinesisanalytics.data.StockTick;
 import org.apache.flink.core.io.SimpleVersionedSerializer;
 import org.apache.flink.streaming.api.functions.sink.filesystem.BucketAssigner;
 
@@ -14,7 +15,7 @@ public class IsinBucketAssigner implements BucketAssigner<StockTick,String> {
 
     @Override
     public String getBucketId(StockTick stockTick, Context context) {
-        var id = stockTick.getBucketKey();
+        var id = "1";//stockTick.getBucketKey();
         return id;
     }
 

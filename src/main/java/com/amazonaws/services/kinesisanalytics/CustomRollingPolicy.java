@@ -1,5 +1,7 @@
 package com.amazonaws.services.kinesisanalytics;
 
+import com.amazonaws.services.kinesisanalytics.data.StockTick;
+
 import org.apache.flink.streaming.api.functions.sink.filesystem.PartFileInfo;
 import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.CheckpointRollingPolicy;
 import org.slf4j.Logger;

@@ -1,13 +1,15 @@
 package com.amazonaws.services.kinesisanalytics;
 
+import com.amazonaws.services.kinesisanalytics.data.StockTick;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 import org.apache.flink.api.common.serialization.DeserializationSchema;
 import org.apache.flink.api.common.typeinfo.TypeInformation;
 
 import java.io.IOException;
 
 public class StockTickDeserializationSchema implements DeserializationSchema<StockTick> {
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private static final ObjectMapper mapper = new ObjectMapper().registerModule(new JodaModule());
 
     @Override
     public StockTick deserialize(byte[] bytes) throws IOException {

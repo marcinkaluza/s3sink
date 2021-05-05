@@ -1,10 +1,10 @@
 package com.amazonaws.services.kinesisanalytics;
 
+import com.amazonaws.services.kinesisanalytics.data.StockTick;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.serialization.Encoder;
-import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.core.fs.Path;
 import org.apache.flink.formats.parquet.avro.ParquetAvroWriters;
 import org.apache.flink.streaming.api.CheckpointingMode;
@@ -61,7 +61,7 @@ public class S3StreamingSinkJob {
 
     private static StreamingFileSink<StockTick> createParquetSink() {
 
-        var writerBuilder = ParquetAvroWriters.forReflectRecord(StockTick.class);
+        var writerBuilder = ParquetAvroWriters.forSpecificRecord(StockTick.class);
 
         return StreamingFileSink
                 .forBulkFormat(new Path(s3SinkPath), writerBuilder)
@@ -103,18 +103,10 @@ public class S3StreamingSinkJob {
         }
     }
 
-    public static final class KeySelector implements org.apache.flink.api.java.functions.KeySelector<StockTick, String> {
-
-        @Override
-        public String getKey(StockTick stockTick) throws Exception {
-            return stockTick.getIsin();
-        }
-    }
-
     private static class DinkySerializer implements Encoder<StockTick> {
         @Override
         public void encode(StockTick stockTick, OutputStream outputStream) throws IOException {
-            var record = String.format("%s,%f,%s\n", stockTick.getIsin(), stockTick.getBid(), stockTick.getTimeStampAsString());
+            var record = String.format("%s,%f,%t\n", stockTick.getIsin(), stockTick.getBid(), stockTick.getTimeStamp());
             outputStream.write(record.getBytes(StandardCharsets.UTF_8));
         }
     }

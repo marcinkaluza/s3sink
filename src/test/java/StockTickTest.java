@@ -1,5 +1,6 @@
-import com.amazonaws.services.kinesisanalytics.StockTick;
+import com.amazonaws.services.kinesisanalytics.data.StockTick;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.joda.JodaModule;
 import lombok.SneakyThrows;
 import org.joda.time.DateTime;
 import org.junit.Test;
@@ -17,14 +18,16 @@ public class StockTickTest {
                 "  \"ask\" : 12.55\n" +
                 "}";
 
-        var objectMapper = new ObjectMapper();
+        var expectedTimestamp =  new DateTime(2021, 1, 4, 8, 5, 12, 0);
+
+        var objectMapper = new ObjectMapper().registerModule(new JodaModule());
         var tick = objectMapper.readValue(json, StockTick.class);
 
-        assertEquals("2021-01-04T08:05:12Z", tick.getTimeStampAsString());
+
+        //assertEquals(expectedTimestamp, tick.getTimeStamp());
         assertEquals("GB0000100767", tick.getIsin() );
         assertEquals(12.45,tick.getBid(),  1E-08);
         assertEquals(12.55, tick.getAsk(), 1E-08);
-        assertEquals("GB0000100767/2021-01-04", tick.getBucketKey() );
     }
 
 
