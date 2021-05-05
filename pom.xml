@@ -224,7 +224,7 @@ This file has been modified to include additional dependencies.
         <dependency>
             <groupId>joda-time</groupId>
             <artifactId>joda-time</artifactId>
-            <version>2.10.8</version>
+            <version>2.9.9</version>
         </dependency>
 
         <dependency>

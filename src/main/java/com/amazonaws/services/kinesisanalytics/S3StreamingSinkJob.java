@@ -3,6 +3,8 @@ package com.amazonaws.services.kinesisanalytics;
 import com.amazonaws.services.kinesisanalytics.data.StockTick;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.joda.JodaModule;
+import org.apache.avro.data.TimeConversions;
+import org.apache.avro.specific.SpecificData;
 import org.apache.flink.api.common.functions.MapFunction;
 import org.apache.flink.api.common.serialization.Encoder;
 import org.apache.flink.core.fs.Path;
@@ -26,8 +28,8 @@ import java.util.concurrent.TimeUnit;
 public class S3StreamingSinkJob {
     private static final String region = "eu-west-1";
     private static final String inputStreamName = "stockprices";
-    private static final String s3SinkPath = "s3a://ca-garbage/data";
-    //private static final String s3SinkPath = "file:///Users/mkaluz/ca-garbage/data";
+    //private static final String s3SinkPath = "s3a://ca-garbage/data";
+    private static final String s3SinkPath = "file:///Users/mkaluz/ca-garbage/data";
 
     private static final Logger LOG = LoggerFactory.getLogger(S3StreamingSinkJob.class);
 
@@ -73,6 +75,9 @@ public class S3StreamingSinkJob {
 
 
     public static void main(String[] args) throws Exception {
+
+        SpecificData.get().addLogicalTypeConversion(new TimeConversions.TimestampConversion());
+
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
         env.enableCheckpointing(60000L, CheckpointingMode.EXACTLY_ONCE);
