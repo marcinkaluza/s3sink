@@ -19,11 +19,11 @@ public class StockTick {
 
     public String getTimeStampAsString(){
         var dateTime = new DateTime(timeStamp);
-        return dateTime.toString("YYYY-mm-DD'T'HH:MM:ss'Z'");
+        return dateTime.toString("yyyy-MM-dd'T'HH:mm:ss'Z'");
     }
 
     public String getBucketKey() {
         var dateTime = new DateTime(timeStamp);
-        return isin + "/" + dateTime.toString("YYYY-mm-DD");
+        return isin + "/" + dateTime.toString("yyyy-MM-dd");
     }
 }

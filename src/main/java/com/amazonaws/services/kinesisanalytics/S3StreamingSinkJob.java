@@ -31,7 +31,7 @@ public class S3StreamingSinkJob {
 
     private static final Logger LOG = LoggerFactory.getLogger(S3StreamingSinkJob.class);
 
-    private static DataStream<String> createSource(StreamExecutionEnvironment env) {
+    private static DataStream<StockTick> createSource(StreamExecutionEnvironment env) {
 
         LOG.debug("Creating source...");
 
@@ -41,7 +41,7 @@ public class S3StreamingSinkJob {
                 "LATEST");
 
         return env.addSource(new FlinkKinesisConsumer<>(inputStreamName,
-                new SimpleStringSchema(),
+                new StockTickDeserializationSchema(),
                 inputProperties));
     }
 
@@ -77,10 +77,9 @@ public class S3StreamingSinkJob {
 
         env.enableCheckpointing(60000L, CheckpointingMode.EXACTLY_ONCE);
 
-        DataStream<String> input = createSource(env);
+        DataStream<StockTick> input = createSource(env);
 
-        input.map(new Tokenizer())
-                .addSink(createParquetSink());
+        input.addSink(createParquetSink());
 
         env.execute("Flink S3 Streaming Sink Job");
     }
