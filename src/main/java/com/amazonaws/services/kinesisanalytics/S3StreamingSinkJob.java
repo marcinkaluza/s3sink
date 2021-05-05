@@ -28,8 +28,6 @@ import java.util.concurrent.TimeUnit;
 public class S3StreamingSinkJob {
     private static final String region = "eu-west-1";
     private static final String inputStreamName = "stockprices";
-    private static final String s3SinkPath = "s3a://ca-garbage/data";
-    // private static final String s3SinkPath = "file:///Users/mkaluz/ca-garbage/data";
 
     private static final Logger LOG = LoggerFactory.getLogger(S3StreamingSinkJob.class);
 
@@ -41,16 +39,17 @@ public class S3StreamingSinkJob {
         inputProperties.setProperty(ConsumerConfigConstants.AWS_REGION, region);
         inputProperties.setProperty(ConsumerConfigConstants.STREAM_INITIAL_POSITION,
                 "LATEST");
+        inputProperties.setProperty(ConsumerConfigConstants.SHARD_GETRECORDS_INTERVAL_MILLIS, "1000");
 
         return env.addSource(new FlinkKinesisConsumer<>(inputStreamName,
                 new StockTickDeserializationSchema(),
                 inputProperties));
     }
 
-    private static StreamingFileSink<StockTick> createSink() {
+    private static StreamingFileSink<StockTick> createSink(String sinkPath) {
 
         return StreamingFileSink
-                .forRowFormat(new Path(s3SinkPath), new DinkySerializer())
+                .forRowFormat(new Path(sinkPath), new DinkySerializer())
                 .withBucketAssigner(new IsinBucketAssigner())
                 .withRollingPolicy(
                         DefaultRollingPolicy.create()
@@ -61,20 +60,25 @@ public class S3StreamingSinkJob {
                 .build();
     }
 
-    private static StreamingFileSink<StockTick> createParquetSink() {
+    private static StreamingFileSink<StockTick> createParquetSink(String sinkPath) {
 
         var writerBuilder = ParquetAvroWriters.forSpecificRecord(StockTick.class);
 
         return StreamingFileSink
-                .forBulkFormat(new Path(s3SinkPath), writerBuilder)
+                .forBulkFormat(new Path(sinkPath), writerBuilder)
                 .withBucketAssigner(new IsinBucketAssigner())
-                //.withRollingPolicy(OnCheckpointRollingPolicy.build())
                 .withRollingPolicy(new CustomRollingPolicy())
                 .build();
     }
 
 
     public static void main(String[] args) throws Exception {
+
+        String sinkPath = "s3a://ca-garbage/data";
+
+        if(args.length > 0){
+            sinkPath = args[0];
+        }
 
         SpecificData.get().addLogicalTypeConversion(new TimeConversions.TimestampConversion());
 
@@ -84,7 +88,7 @@ public class S3StreamingSinkJob {
 
         DataStream<StockTick> input = createSource(env);
 
-        input.addSink(createParquetSink());
+        input.addSink(createParquetSink(sinkPath));
 
         env.execute("Flink S3 Streaming Sink Job");
     }

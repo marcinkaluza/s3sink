@@ -16,7 +16,7 @@ public class CustomRollingPolicy extends CheckpointRollingPolicy<StockTick, Stri
     @Override
     public boolean shouldRollOnEvent(PartFileInfo<String> partFileInfo, StockTick stockTick) throws IOException {
         LOG.info("File size: {}", partFileInfo.getSize());
-        return true;
+        return partFileInfo.getSize() > 100 * 1024;
     }
 
     @Override
