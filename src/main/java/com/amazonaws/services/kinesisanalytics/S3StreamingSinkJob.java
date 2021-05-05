@@ -79,7 +79,7 @@ public class S3StreamingSinkJob {
 
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
-        env.enableCheckpointing(60000L, CheckpointingMode.EXACTLY_ONCE);
+        env.enableCheckpointing(180000L, CheckpointingMode.EXACTLY_ONCE);
         DataStream<StockTick> input = createSource(env);
         input.keyBy(t -> t.getIsin())
                 .addSink(createParquetSink(sinkPath))
