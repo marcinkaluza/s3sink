@@ -1,5 +1,5 @@
 {
-  "namespace": "com.amazonaws.services.kinesisanalytics",
+  "namespace": "com.amazonaws.services.kinesisanalytics.data",
   "type": "record",
   "name": "StockTick",
   "fields": [
