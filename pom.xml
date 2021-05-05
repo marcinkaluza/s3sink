@@ -327,7 +327,7 @@ This file has been modified to include additional dependencies.
                             </filters>
                             <transformers>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>package com.amazonaws.services.kinesisanalytics.S3StreamingSinkJob</mainClass>
+                                    <mainClass>com.amazonaws.services.kinesisanalytics.S3StreamingSinkJob</mainClass>
                                 </transformer>
                                 <transformer implementation="org.apache.maven.plugins.shade.resource.AppendingTransformer">
                                     <resource>META-INF/services/org.apache.flink.core.execution.PipelineExecutorFactory</resource>
