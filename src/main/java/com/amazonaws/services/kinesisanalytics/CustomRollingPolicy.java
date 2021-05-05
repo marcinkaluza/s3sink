@@ -21,6 +21,7 @@ public class CustomRollingPolicy extends CheckpointRollingPolicy<StockTick, Stri
 
     @Override
     public boolean shouldRollOnProcessingTime(PartFileInfo<String> partFileInfo, long l) throws IOException {
+        LOG.info("Processing time file size: {}", partFileInfo.getSize());
         return true;
     }
 }
