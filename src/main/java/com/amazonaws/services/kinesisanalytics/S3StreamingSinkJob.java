@@ -77,16 +77,13 @@ public class S3StreamingSinkJob {
             sinkPath = args[0];
         }
 
-        //SpecificData.get().addLogicalTypeConversion(new TimeConversions.TimestampMillisConversion());
+        SpecificData.get().addLogicalTypeConversion(new TimeConversions.TimestampConversion());
 
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
         env.enableCheckpointing(60000L, CheckpointingMode.EXACTLY_ONCE);
-
         DataStream<StockTick> input = createSource(env);
-
         input.addSink(createParquetSink(sinkPath));
-
         env.execute("Flink S3 Streaming Sink Job");
     }
 
