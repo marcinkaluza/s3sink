@@ -11,4 +11,8 @@ public class StockTick {
     private DateTime timeStamp;
     private double ask;
     private double bid;
+
+    public String getTimeStampAsString(){
+        return timeStamp.toString("YYYY-mm-DD");
+    }
 }

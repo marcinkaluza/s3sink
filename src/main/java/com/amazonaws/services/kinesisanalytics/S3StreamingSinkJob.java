@@ -95,10 +95,10 @@ public class S3StreamingSinkJob {
         public StockTick map(String s) throws Exception {
 
             try{
-            var stockTick = mapper.readValue(s, StockTick.class);
-            return stockTick;}
-            catch(Throwable e)
-            {
+                var stockTick = mapper.readValue(s, StockTick.class);
+                return stockTick;
+            }
+            catch(Throwable e) {
                 throw e;
             }
         }
@@ -112,7 +112,6 @@ public class S3StreamingSinkJob {
         }
     }
 
-
     private static class DinkySerializer implements Encoder<StockTick> {
         @Override
         public void encode(StockTick stockTick, OutputStream outputStream) throws IOException {
@@ -120,18 +119,4 @@ public class S3StreamingSinkJob {
             outputStream.write(record.getBytes(StandardCharsets.UTF_8));
         }
     }
-
-//    private static class  StockTickConverter implements MapFunction<StockTick, StockTick> {
-//
-//        @Override
-//        public ParquetStockTick map(StockTick stockTick) throws Exception {
-//            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-//
-//
-//            return new ParquetStockTick(stockTick.getIsin(),
-//                    stockTick.getTimeStamp().toString("yyyy-MM-dd HH:mm:SS"),
-//                    stockTick.getAsk(),
-//                    stockTick.getBid());
-//        }
-//    }
 }
