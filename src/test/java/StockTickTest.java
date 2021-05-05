@@ -1,10 +1,11 @@
 import com.amazonaws.services.kinesisanalytics.data.StockTick;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.joda.JodaModule;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.SneakyThrows;
 import org.joda.time.DateTime;
 import org.junit.Test;
-import static org.junit.Assert.*;
+
+import static org.junit.Assert.assertEquals;
 
 public class StockTickTest {
 
@@ -20,7 +21,7 @@ public class StockTickTest {
 
         var expectedTimestamp =  new DateTime(2021, 1, 4, 8, 5, 12, 0);
 
-        var objectMapper = new ObjectMapper().registerModule(new JodaModule());
+        var objectMapper = new ObjectMapper().registerModule(new JavaTimeModule());
         var tick = objectMapper.readValue(json, StockTick.class);
 
 

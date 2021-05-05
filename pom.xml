@@ -240,6 +240,12 @@ This file has been modified to include additional dependencies.
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro</artifactId>
+            <version>1.10.2</version>
+        </dependency>
+
     </dependencies>
 
     <build>
@@ -274,7 +280,7 @@ This file has been modified to include additional dependencies.
             <plugin>
                 <groupId>org.apache.avro</groupId>
                 <artifactId>avro-maven-plugin</artifactId>
-                <version>${avro.version}</version>
+                <version>1.10.2</version>
 
                 <executions>
                     <execution>

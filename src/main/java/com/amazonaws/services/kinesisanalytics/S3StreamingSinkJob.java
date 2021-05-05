@@ -80,7 +80,7 @@ public class S3StreamingSinkJob {
             sinkPath = args[0];
         }
 
-        SpecificData.get().addLogicalTypeConversion(new TimeConversions.TimestampConversion());
+        SpecificData.get().addLogicalTypeConversion(new TimeConversions.TimestampMillisConversion());
 
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
@@ -91,25 +91,6 @@ public class S3StreamingSinkJob {
         input.addSink(createParquetSink(sinkPath));
 
         env.execute("Flink S3 Streaming Sink Job");
-    }
-
-    public static final class Tokenizer
-            implements MapFunction<String, StockTick> {
-
-        private static final ObjectMapper mapper = new ObjectMapper()
-                .registerModule(new JodaModule());
-
-        @Override
-        public StockTick map(String s) throws Exception {
-
-            try{
-                var stockTick = mapper.readValue(s, StockTick.class);
-                return stockTick;
-            }
-            catch(Throwable e) {
-                throw e;
-            }
-        }
     }
 
     private static class DinkySerializer implements Encoder<StockTick> {
