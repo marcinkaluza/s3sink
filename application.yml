@@ -1,0 +1,42 @@
+---
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "This CF template deploys an ECS service on the pre-configured ECS cluster."
+
+
+Parameters:
+  ApplicationName:
+    Type: String
+    Default: datapump
+    Description: Name of the KDA application
+  BucketArn:
+    Type: String
+    Default: arn:aws:s3:::ca-datapump-code
+    Description: ARN of the S3 Bucket containing application code
+  Key:
+    Type: String
+    Default: 08741a8003e86d0633d2d381d6a965b7423a640e/datapump-1.0.jar
+    Description: S3 Object containing application code
+  RoleArn:
+    Type: String
+    Default: arn:aws:iam::858385345261:role/service-role/kinesis-analytics-datapump-1-eu-west-1
+    Description: ARN of the execution role to be used
+
+Resources:
+    Application:
+      Type: AWS::KinesisAnalyticsV2::Application
+      Properties:
+        RuntimeEnvironment: FLINK-1_11
+        ServiceExecutionRole: !Ref RoleArn
+        ApplicationName: !Ref ApplicationName
+        ApplicationConfiguration:
+          ApplicationCodeConfiguration:
+            CodeContent:
+              S3ContentLocation:
+                BucketARN: !Ref BucketArn
+                FileKey: !Ref Key
+            CodeContentType: ZIPFILE
+          FlinkApplicationConfiguration:
+            ParallelismConfiguration:
+              ConfigurationType: "CUSTOM"
+              Parallelism: 12
+              ParallelismPerKPU: 1
