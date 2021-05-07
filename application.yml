@@ -36,6 +36,11 @@ Resources:
                 FileKey: !Ref Key
             CodeContentType: ZIPFILE
           FlinkApplicationConfiguration:
+            CheckpointConfiguration:
+              CheckpointingEnabled: True
+              CheckpointInterval: 600000
+              ConfigurationType: CUSTOM
+              MinPauseBetweenCheckpoints: 60000
             ParallelismConfiguration:
               ConfigurationType: "CUSTOM"
               Parallelism: 12
