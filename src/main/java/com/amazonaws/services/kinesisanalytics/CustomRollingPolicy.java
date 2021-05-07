@@ -26,15 +26,17 @@ public class CustomRollingPolicy extends CheckpointRollingPolicy<StockTick, Stri
         return false;
     }
 
-    private boolean shouldRoll(PartFileInfo<String> partFileInfo) throws IOException {
-        return partFileInfo.getSize() > 1 * MB || partFileInfo.getLastUpdateTime() < Instant.now().minusSeconds(300).toEpochMilli();
-    }
-
     @Override
     public boolean shouldRollOnProcessingTime(PartFileInfo<String> partFileInfo, long l) throws IOException {
         if(shouldRoll(partFileInfo)){
             LOG.info("Roll on enabled - file size: {}. Bucket: {}", partFileInfo.getSize(), partFileInfo.getBucketId());
             return true;
         };
+
+        return false;
+    }
+
+    private boolean shouldRoll(PartFileInfo<String> partFileInfo) throws IOException {
+        return partFileInfo.getSize() > 1 * MB || partFileInfo.getLastUpdateTime() < Instant.now().minusSeconds(300).toEpochMilli();
     }
 }
