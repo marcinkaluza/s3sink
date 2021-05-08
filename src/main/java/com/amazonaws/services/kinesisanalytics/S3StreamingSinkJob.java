@@ -1,8 +1,6 @@
 package com.amazonaws.services.kinesisanalytics;
 
 import com.amazonaws.services.kinesisanalytics.data.StockTick;
-import org.apache.avro.data.TimeConversions;
-import org.apache.avro.specific.SpecificData;
 import org.apache.flink.api.common.serialization.Encoder;
 import org.apache.flink.core.fs.Path;
 import org.apache.flink.formats.parquet.avro.ParquetAvroWriters;

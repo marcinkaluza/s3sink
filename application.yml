@@ -47,5 +47,5 @@ Resources:
               ParallelismPerKPU: 1
             MonitoringConfiguration:
               ConfigurationType: CUSTOM
-              LogLevel: INFO
+              LogLevel: WARN
               MetricsLevel: TASK
