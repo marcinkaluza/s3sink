@@ -45,3 +45,7 @@ Resources:
               ConfigurationType: "CUSTOM"
               Parallelism: 12
               ParallelismPerKPU: 1
+            MonitoringConfiguration:
+              ConfigurationType: CUSTOM
+              LogLevel: INFO
+              MetricsLevel: TASK
