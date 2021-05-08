@@ -13,6 +13,8 @@ import java.time.Instant;
 public class CustomRollingPolicy extends CheckpointRollingPolicy<StockTick, String> {
 
     private final static int MB = 1024 * 1024;
+    private final static int KB = 1024;
+
     Logger LOG = LoggerFactory.getLogger(CustomRollingPolicy.class);
 
     @Override
@@ -37,6 +39,6 @@ public class CustomRollingPolicy extends CheckpointRollingPolicy<StockTick, Stri
     }
 
     private boolean shouldRoll(PartFileInfo<String> partFileInfo) throws IOException {
-        return partFileInfo.getSize() > 1 * MB || partFileInfo.getLastUpdateTime() < Instant.now().minusSeconds(300).toEpochMilli();
+        return partFileInfo.getSize() > 500 * KB || partFileInfo.getLastUpdateTime() < Instant.now().minusSeconds(300).toEpochMilli();
     }
 }
