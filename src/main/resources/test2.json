@@ -1,0 +1,20 @@
+{
+  "RIC": "DE103035Y=DM",
+  "Alias_Underlying_RIC": "",
+  "Domain": "Market Price",
+  "Date_Time": "2021-04-26T13:13:56.865845225Z",
+  "GMT_Offset": "+2",
+  "Type": "Quote",
+  "Ex_Cntrb_ID": "",
+  "Bid_Price": "-0.642",
+  "Bid_Size": "10000",
+  "Ask_Price": "0",
+  "Ask_Size": "",
+  "Bid_Yld": "",
+  "Ask_Yld": "",
+  "Date": "",
+  "Strike": "",
+  "Mid_Price": "",
+  "Display_Name": "",
+  "ISIN": ""
+}

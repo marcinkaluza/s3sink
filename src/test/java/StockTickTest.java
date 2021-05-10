@@ -25,8 +25,8 @@ public class StockTickTest {
 
 
         //assertEquals(expectedTimestamp, tick.getTimeStamp());
-        assertEquals("GB0000100767", tick.getIsin() );
-        assertEquals(12.45,tick.getBid(),  1E-08);
-        assertEquals(12.55, tick.getAsk(), 1E-08);
+        assertEquals("GB0000100767", tick.getRic() );
+        assertEquals(12.45,tick.getBidPrice(),  1E-08);
+        assertEquals(12.55, tick.getAskPrice(), 1E-08);
     }
 }

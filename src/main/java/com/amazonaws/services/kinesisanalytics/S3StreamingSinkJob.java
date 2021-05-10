@@ -1,6 +1,6 @@
 package com.amazonaws.services.kinesisanalytics;
 
-import com.amazonaws.services.kinesisanalytics.data.StockTick;
+import com.amazonaws.services.kinesisanalytics.data.Quote;
 import org.apache.flink.api.common.serialization.Encoder;
 import org.apache.flink.core.fs.Path;
 import org.apache.flink.formats.parquet.avro.ParquetAvroWriters;
@@ -26,7 +26,7 @@ public class S3StreamingSinkJob {
 
     private static final Logger LOG = LoggerFactory.getLogger(S3StreamingSinkJob.class);
 
-    private static DataStream<StockTick> createSource(StreamExecutionEnvironment env) {
+    private static DataStream<Quote> createSource(StreamExecutionEnvironment env) {
 
         LOG.debug("Creating source...");
 
@@ -41,7 +41,7 @@ public class S3StreamingSinkJob {
                 inputProperties));
     }
 
-    private static StreamingFileSink<StockTick> createSink(String sinkPath) {
+    private static StreamingFileSink<Quote> createSink(String sinkPath) {
 
         return StreamingFileSink
                 .forRowFormat(new Path(sinkPath), new DinkySerializer())
@@ -55,9 +55,9 @@ public class S3StreamingSinkJob {
                 .build();
     }
 
-    private static StreamingFileSink<StockTick> createParquetSink(String sinkPath) {
+    private static StreamingFileSink<Quote> createParquetSink(String sinkPath) {
 
-        var writerBuilder = ParquetAvroWriters.forSpecificRecord(StockTick.class);
+        var writerBuilder = ParquetAvroWriters.forSpecificRecord(Quote.class);
 
         return StreamingFileSink
                 .forBulkFormat(new Path(sinkPath), writerBuilder)
@@ -78,17 +78,17 @@ public class S3StreamingSinkJob {
         final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 
         env.enableCheckpointing(180000L, CheckpointingMode.EXACTLY_ONCE);
-        DataStream<StockTick> input = createSource(env);
-        input.keyBy(t -> t.getIsin())
+        DataStream<Quote> input = createSource(env);
+        input.keyBy(t -> t.getRic())
                 .addSink(createParquetSink(sinkPath))
                 .name("S3 Sink");
         env.execute("Flink S3 Streaming Sink Job");
     }
 
-    private static class DinkySerializer implements Encoder<StockTick> {
+    private static class DinkySerializer implements Encoder<Quote> {
         @Override
-        public void encode(StockTick stockTick, OutputStream outputStream) throws IOException {
-            var record = String.format("%s,%f,%t\n", stockTick.getIsin(), stockTick.getBid(), stockTick.getTimeStamp());
+        public void encode(Quote quote, OutputStream outputStream) throws IOException {
+            var record = String.format("%s,%f,%t\n", quote.getRic(), quote.getBidPrice(), quote.getDateTime());
             outputStream.write(record.getBytes(StandardCharsets.UTF_8));
         }
     }

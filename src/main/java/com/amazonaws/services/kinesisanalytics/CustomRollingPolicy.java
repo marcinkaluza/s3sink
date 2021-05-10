@@ -1,6 +1,6 @@
 package com.amazonaws.services.kinesisanalytics;
 
-import com.amazonaws.services.kinesisanalytics.data.StockTick;
+import com.amazonaws.services.kinesisanalytics.data.Quote;
 
 import org.apache.flink.streaming.api.functions.sink.filesystem.PartFileInfo;
 import org.apache.flink.streaming.api.functions.sink.filesystem.rollingpolicies.CheckpointRollingPolicy;
@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.time.Instant;
 
-public class CustomRollingPolicy extends CheckpointRollingPolicy<StockTick, String> {
+public class CustomRollingPolicy extends CheckpointRollingPolicy<Quote, String> {
 
     private final static int MB = 1024 * 1024;
     private final static int KB = 1024;
@@ -18,7 +18,7 @@ public class CustomRollingPolicy extends CheckpointRollingPolicy<StockTick, Stri
     Logger LOG = LoggerFactory.getLogger(CustomRollingPolicy.class);
 
     @Override
-    public boolean shouldRollOnEvent(PartFileInfo<String> partFileInfo, StockTick stockTick) throws IOException {
+    public boolean shouldRollOnEvent(PartFileInfo<String> partFileInfo, Quote quote) throws IOException {
 
         if(shouldRoll(partFileInfo)){
             LOG.info("Roll on enabled - file size: {}. Bucket: {}", partFileInfo.getSize(), partFileInfo.getBucketId());

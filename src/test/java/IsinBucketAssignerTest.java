@@ -1,5 +1,5 @@
 import com.amazonaws.services.kinesisanalytics.IsinBucketAssigner;
-import com.amazonaws.services.kinesisanalytics.data.StockTick;
+import com.amazonaws.services.kinesisanalytics.data.Quote;
 import org.joda.time.DateTime;
 import org.junit.Test;
 
@@ -11,10 +11,10 @@ public class IsinBucketAssignerTest {
     @Test
     public void getBucketId(){
         var bucketAssigner = new IsinBucketAssigner();
-        var tick = new StockTick();
+        var tick = new Quote();
 
-        tick.setIsin("MSFT");
-        tick.setTimeStamp(DateTime.parse("2021-02-03T08:45:13Z"));
+        tick.setRic("MSFT");
+        tick.setDateTime(DateTime.parse("2021-02-03T08:45:13Z"));
 
         var bucket = bucketAssigner.getBucketId(tick, null);
 

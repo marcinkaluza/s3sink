@@ -1,26 +1,26 @@
 
 package com.amazonaws.services.kinesisanalytics;
 
-import com.amazonaws.services.kinesisanalytics.data.StockTick;
+import com.amazonaws.services.kinesisanalytics.data.Quote;
 import org.apache.flink.core.io.SimpleVersionedSerializer;
 import org.apache.flink.streaming.api.functions.sink.filesystem.BucketAssigner;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-public class IsinBucketAssigner implements BucketAssigner<StockTick,String> {
+public class IsinBucketAssigner implements BucketAssigner<Quote,String> {
 
     public IsinBucketAssigner() {
     }
 
     @Override
-    public String getBucketId(StockTick stockTick, Context context) {
+    public String getBucketId(Quote quote, Context context) {
 
         var id = String.format("%s/%d-%02d-%02d",
-                stockTick.getIsin(),
-                stockTick.getTimeStamp().getYear(),
-                stockTick.getTimeStamp().getMonthOfYear(),
-                stockTick.getTimeStamp().getDayOfMonth());
+                quote.getRic(),
+                quote.getDateTime().getYear(),
+                quote.getDateTime().getMonthOfYear(),
+                quote.getDateTime().getDayOfMonth());
         return id;
     }
 

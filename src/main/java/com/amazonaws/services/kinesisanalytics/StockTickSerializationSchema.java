@@ -1,6 +1,6 @@
 package com.amazonaws.services.kinesisanalytics;
 
-import com.amazonaws.services.kinesisanalytics.data.StockTick;
+import com.amazonaws.services.kinesisanalytics.data.Quote;
 import org.apache.avro.data.TimeConversions;
 import org.apache.avro.specific.SpecificData;
 import org.apache.flink.api.common.serialization.DeserializationSchema;
@@ -11,7 +11,7 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class StockTickSerializationSchema implements SerializationSchema<StockTick>, DeserializationSchema<StockTick> {
+public class StockTickSerializationSchema implements SerializationSchema<Quote>, DeserializationSchema<Quote> {
 
     private final org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper mapper = new org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.ObjectMapper();
     private static final Logger LOG = LoggerFactory.getLogger(StockTickSerializationSchema.class);
@@ -21,21 +21,21 @@ public class StockTickSerializationSchema implements SerializationSchema<StockTi
     }
 
     @Override
-    public byte[] serialize(StockTick StockTick) {
-        return toJson(StockTick).getBytes();
+    public byte[] serialize(Quote Quote) {
+        return toJson(Quote).getBytes();
     }
 
     @Override
-    public StockTick deserialize(byte[] bytes) {
+    public Quote deserialize(byte[] bytes) {
         try {
             org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode node = this.mapper.readValue(bytes, org.apache.flink.shaded.jackson2.com.fasterxml.jackson.databind.node.ObjectNode.class);
 
-            return StockTick
+            return Quote
                     .newBuilder()
-                    .setIsin(node.get("isin").asText())
-                    .setTimeStamp(new DateTime(node.get("timeStamp").asText()))
-                    .setAsk(node.get("ask").asDouble())
-                    .setBid(node.get("bid").asDouble())
+                    .setRic(node.get("RIC").asText())
+                    .setDateTime(new DateTime(node.get("Date_Time").asText()))
+                    .setAskPrice(node.get("Ask_Price").asDouble())
+                    .setBidPrice(node.get("Bid_Price").asDouble())
                     .build();
 
         } catch (Exception e) {
@@ -46,34 +46,34 @@ public class StockTickSerializationSchema implements SerializationSchema<StockTi
     }
 
     @Override
-    public boolean isEndOfStream(StockTick StockTick) {
+    public boolean isEndOfStream(Quote Quote) {
         return false;
     }
 
     @Override
-    public TypeInformation<StockTick> getProducedType() {
-        return new AvroTypeInfo<>(StockTick.class);
+    public TypeInformation<Quote> getProducedType() {
+        return new AvroTypeInfo<>(Quote.class);
     }
 
 
-    public static String toJson(StockTick StockTick) {
+    public static String toJson(Quote Quote) {
         StringBuilder builder = new StringBuilder();
 
         builder.append("{");
-        addTextField(builder, StockTick, "isin");
+        addTextField(builder, Quote, "RIC");
         builder.append(", ");
-        addField(builder, "timeStamp", StockTick.getTimeStamp().getMillis());
+        addField(builder, "Date_Time", Quote.getDateTime().getMillis());
         builder.append(", ");
-        addField(builder, StockTick, "ask");
+        addField(builder, Quote, "Ask_Price");
         builder.append(", ");
-        addField(builder, StockTick, "bid");
+        addField(builder, Quote, "Bid_Price");
         builder.append("}");
 
         return builder.toString();
     }
 
-    private static void addField(StringBuilder builder, StockTick StockTick, String fieldName) {
-        addField(builder, fieldName, StockTick.get(fieldName));
+    private static void addField(StringBuilder builder, Quote Quote, String fieldName) {
+        addField(builder, fieldName, Quote.get(fieldName));
     }
 
     private static void addField(StringBuilder builder, String fieldName, Object value) {
@@ -85,14 +85,14 @@ public class StockTickSerializationSchema implements SerializationSchema<StockTi
         builder.append(value);
     }
 
-    private static void addTextField(StringBuilder builder, StockTick StockTick, String fieldName) {
+    private static void addTextField(StringBuilder builder, Quote Quote, String fieldName) {
         builder.append("\"");
         builder.append(fieldName);
         builder.append("\"");
 
         builder.append(": ");
         builder.append("\"");
-        builder.append(StockTick.get(fieldName));
+        builder.append(Quote.get(fieldName));
         builder.append("\"");
     }
 }
