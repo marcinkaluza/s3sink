@@ -69,7 +69,7 @@ public class S3StreamingSinkJob {
 
     public static void main(String[] args) throws Exception {
 
-        String sinkPath = "s3a://ca-garbage/data";
+        String sinkPath = "<S3 Bucket in here>>";
 
         if(args.length > 0){
             sinkPath = args[0];
